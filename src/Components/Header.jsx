@@ -49,11 +49,6 @@ function Header() {
                         </svg>
                         <span>3</span>
                     </Button>
-
-
-
-
-
                 </div>
             </div>
         </div>
