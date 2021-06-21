@@ -1,27 +1,33 @@
 import React from 'react';
 
-function SortPopup() {
+function SortPopup({items}) {
 
-    const [visible, setVisible] = React.useState(false)
-    const tooglePopup =()=> {
+    const [visible, setVisible] = React.useState(false);
+    const [activeItem, setActiveItem] = React.useState(0);
+    const tooglePopup = () => {
         setVisible(!visible)
-    }
+    };
+    const onSelectItem = (id) => {
+        setActiveItem(id)
+        setVisible(false)
+    };
     const overlayClick = (e) => {
         if (!e.path.includes(sortRef.current)) {
             setVisible(false)
         }
-    }
-    const sortRef = React.useRef()
+    };
+    const sortRef = React.useRef();
+    const activeLabel = items[activeItem]
 
-    React.useEffect( ()=> {
-      document.body.addEventListener('click', overlayClick)
+    React.useEffect(() => {
+        document.body.addEventListener('click', overlayClick)
 
     }, [])
 
     return (
         <div ref={sortRef} className="sort">
             <div className="sort__label">
-                <svg
+                <svg className={visible ? 'rotated' : ''}
                     width="10"
                     height="6"
                     viewBox="0 0 10 6"
@@ -34,13 +40,18 @@ function SortPopup() {
                     />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={tooglePopup}>популярности</span>
+                <span onClick={tooglePopup}>{activeLabel}</span>
             </div>
             {visible && <div className="sort__popup">
                 <ul>
-                    <li className="active">популярности</li>
-                    <li>цене</li>
-                    <li>алфавиту</li>
+                    {items &&
+                    items.map((name, id) => (
+                            <li className={activeItem === id ? 'active' : ''}
+                                onClick={() => onSelectItem(id)}
+                                key={`${name}_${id}`}>
+                                {name}</li>
+                        )
+                    )}
                 </ul>
             </div>}
         </div>);
